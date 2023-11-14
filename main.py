@@ -164,3 +164,8 @@ async def conversacion(jid):
 @app.get("/main_menu/{jid}")
 async def Main_menu(jid):
     return main_menu(jid)
+
+@app.get("/perfil/{jid}")
+async def obtener_perfil(jid):
+    return perfil(jid)
+

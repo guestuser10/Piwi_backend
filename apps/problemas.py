@@ -1,5 +1,5 @@
 import json
-from database import Problema, Creyentes
+from database import Problema, Creyentes, Estados
 from schemas import ProblemaRequestModel, ProblemaResponseModel
 
 
@@ -80,3 +80,33 @@ def main_menu(gpo):
     json_result = json.dumps({'Problemas': resultados})
     data = json.loads(json_result)
     return data
+
+
+def perfil(jid):
+    problemas = Problema.select().join(Creyentes).join(
+        Estados, on=(Problema.id_estado == Estados.id)
+    ).where(
+        ((Creyentes.id == jid) & (Problema.activo == 1)) | ((Creyentes.id == 3) & (Problema.activo == 1))
+    ).order_by(Problema.revision.asc())
+
+    resultados = []
+
+    for fila in problemas:
+        creyente = Creyentes.get(Creyentes.id == fila.id_creyente.id)
+        estado = Estados.get(Estados.id == fila.id_estado.id)
+        modelo = {
+            'id': fila.id,
+            'id_creyente': fila.id_creyente.id,
+            'nombre_creyente': creyente.nombre,
+            'descripcion': fila.descripcion,
+            'fecha_creacion': fila.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'revision': fila.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'id_estado': fila.id_estado.id,
+            'nombre_estado': estado.nombre,
+            'activo': fila.activo
+        }
+        resultados.append(modelo)
+
+        data = {'Problemas': resultados}
+    return data
+
