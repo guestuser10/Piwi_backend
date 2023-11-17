@@ -49,3 +49,22 @@ def elimnar_creyentes(jid):
         datos.save()
         return 'exito'
     return 'error'
+
+
+def barra_busqueda_miembros(search_text):
+    request = Creyentes.select().where(Creyentes.activo == 1 and Creyentes.nombre.contains(search_text))
+    resultados = []
+    for fila in request:
+        modelo = {
+            'id': fila.id,
+            'nombre': fila.nombre,
+            'telefono': fila.telefono,
+            'direccion': fila.direccion,
+            'dias_disp': fila.direccion,
+            'id_grupo': fila.id_grupo.id,
+            'activo': fila.activo
+        }
+        resultados.append(modelo)
+    json_result = json.dumps({'Creyentes': resultados})
+    data = json.loads(json_result)
+    return data

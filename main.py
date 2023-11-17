@@ -1,6 +1,8 @@
 import json
 from json import dumps
 from peewee import *
+from starlette.middleware.cors import CORSMiddleware
+
 from database import *
 from schemas import GruposRequestModel
 from fastapi import FastAPI
@@ -11,7 +13,17 @@ app = FastAPI(
     version='1.0'
 )
 
-
+origins = [
+    "http://localhost",
+    "http://localhost:4200",  # Reemplaza con la URL de tu aplicación Angular en desarrollo
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # ********************************************************************************************
 # events
 @app.on_event("startup")
@@ -169,3 +181,12 @@ async def Main_menu(jid):
 async def obtener_perfil(jid):
     return perfil(jid)
 
+
+@app.get("/miembros/{search_text}")
+async def buscar_miembro(search_text):
+    return barra_busqueda_miembros(search_text)
+
+
+@app.get("/obreros/{search_text}")
+async def buscar_obrero(search_text):
+    return barra_busqueda_obreros(search_text)

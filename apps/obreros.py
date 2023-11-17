@@ -51,3 +51,21 @@ def elimnar_obrero(jid):
         datos.save()
         return 'exito'
     return 'error'
+
+
+def barra_busqueda_obreros(search_text):
+    request = Obreros.select().where(Obreros.activo == 1 and Obreros.nombre.contains(search_text))
+    resultados = []
+    for fila in request:
+        modelo = {
+            'id': fila.id,
+            'nombre': fila.nombre,
+            'telefono': fila.telefono,
+            'direccion': fila.direccion,
+            'id_grupo': fila.id_grupo.id,
+            'activo': fila.activo,
+        }
+        resultados.append(modelo)
+    json_result = json.dumps({'Obreros': resultados})
+    data = json.loads(json_result)
+    return data
