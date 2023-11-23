@@ -75,6 +75,7 @@ class Estados(Model):
 class Problema(Model):
     id = IntegerField()
     id_creyente = ForeignKeyField(Creyentes, field='id', backref='problema', column_name='id_creyente')
+    nombre_problema = CharField(max_length=50)
     descripcion = TextField()
     fecha_creacion = DateTimeField(default=datetime.now)
     revision = DateTimeField(default=(datetime.now() + timedelta(weeks=1)))

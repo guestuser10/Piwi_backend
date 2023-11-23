@@ -43,6 +43,7 @@ def buscar_conversacion(id_problema):
             'id': problema.id,
             'id_creyente': problema.id_creyente.id,
             'nombre_creyente': problema.id_creyente.nombre,
+            'nombre_problema': problema.nombre_problema,
             'descripcion': problema.descripcion,
             'fecha_creacion': problema.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'revision': problema.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),

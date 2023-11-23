@@ -34,6 +34,7 @@ class EstadosRequestModel(BaseModel):
 
 class ProblemaRequestModel(BaseModel):
     id_creyente: int
+    nombre_problema: str
     descripcion: str
     fecha_creacion: datetime
     revision: datetime

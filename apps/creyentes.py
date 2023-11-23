@@ -52,7 +52,7 @@ def elimnar_creyentes(jid):
 
 
 def barra_busqueda_miembros(search_text):
-    request = Creyentes.select().where(Creyentes.activo == 1 and Creyentes.nombre.contains(search_text))
+    request = Creyentes.select().where(Creyentes.activo == 1 & Creyentes.nombre.contains(search_text))
     resultados = []
     for fila in request:
         modelo = {

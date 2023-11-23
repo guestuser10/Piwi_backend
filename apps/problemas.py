@@ -6,6 +6,7 @@ from schemas import ProblemaRequestModel, ProblemaResponseModel
 def crear_problema(request: ProblemaRequestModel):
     request = Problema.create(
         id_creyente=request.id_creyente,
+        nombre_problema=request.nombre_problema,
         descripcion=request.descripcion,
         fecha_creacion=request.fecha_creacion,
         revision=request.revision,
@@ -25,6 +26,7 @@ def buscar_problemas():
             'id': fila.id,
             'id_creyente': fila.id_creyente.id,
             'nombre_creyente': creyente.nombre,
+            'nombre_problema': fila.nombre_problema,
             'descripcion': fila.descripcion,
             'fecha_creacion': fila.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'revision': fila.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -69,6 +71,7 @@ def main_menu(gpo):
             'id': fila.id,
             'id_creyente': fila.id_creyente.id,
             'nombre_creyente': creyente.nombre,
+            'nombre_problema': fila.nombre_problema,
             'descripcion': fila.descripcion,
             'fecha_creacion': fila.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'revision': fila.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -98,6 +101,7 @@ def perfil(jid):
             'id': fila.id,
             'id_creyente': fila.id_creyente.id,
             'nombre_creyente': creyente.nombre,
+            'nombre_problema': fila.nombre_problema,
             'descripcion': fila.descripcion,
             'fecha_creacion': fila.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'revision': fila.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -110,3 +114,23 @@ def perfil(jid):
         data = {'Problemas': resultados}
     return data
 
+
+def cambiar_estado_problema(jid, id_estado):
+    datos = Problema.select().where(Problema.id == jid).first()
+    if datos:
+        setattr(datos, 'id_estado', id_estado)
+        datos.save()
+        return 'exito'
+    return 'error'
+
+
+def cambiar_revision_problema(jid, revision):
+    datos = Problema.select().where(Problema.id == jid).first()
+    if datos:
+        setattr(datos, 'revision', revision)
+        datos.save()
+        return 'exito'
+    return 'error'
+
+
+# **********************************************************************

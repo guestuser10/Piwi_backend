@@ -5,8 +5,12 @@ from starlette.middleware.cors import CORSMiddleware
 
 from database import *
 from schemas import GruposRequestModel
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
 from apps.connector import *
+
+
 app = FastAPI(
     title='pds',
     description='api para german',
@@ -46,6 +50,16 @@ async def root():
 
 
 # ********************************************************************************************
+#login
+Oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+@app.post('/token')
+async def token(request_login: OAuth2PasswordRequestForm = Depends()):
+    return await login_user(request_login)
+
+
+# ********************************************************************************************
 # CRUD grupo
 # Insert
 @app.post("/create_grupo")
@@ -61,7 +75,7 @@ async def select_grupo():
 
 #eliminar
 @app.put("/desactivar_grupo/{jid}")
-async def desactivar_grupo(jid):
+async def desactivar_grupo(jid, request_login: str = Depends(Oauth2_scheme)):
     return elimnar_grupo(jid)
 
 
@@ -166,7 +180,7 @@ async def desactivar_mensaje(jid):
 
 
 # eliminar
-@app.put("/conversacion/{jid}")
+@app.get("/conversacion/{jid}")
 async def conversacion(jid):
     return buscar_conversacion(jid)
 
@@ -176,6 +190,7 @@ async def conversacion(jid):
 @app.get("/main_menu/{jid}")
 async def Main_menu(jid):
     return main_menu(jid)
+
 
 @app.get("/perfil/{jid}")
 async def obtener_perfil(jid):
@@ -190,3 +205,13 @@ async def buscar_miembro(search_text):
 @app.get("/obreros/{search_text}")
 async def buscar_obrero(search_text):
     return barra_busqueda_obreros(search_text)
+
+
+@app.put("/estado/{jid}/{estado_id}")
+async def cambiar_estado(jid, estado_id):
+    return cambiar_estado_problema(jid, estado_id)
+
+
+@app.put("/revision/{jid}/{revision}")
+async def cambiar_revision(jid, revision):
+    return cambiar_revision_problema(jid, revision)

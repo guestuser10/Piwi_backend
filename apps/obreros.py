@@ -2,6 +2,10 @@ import json
 from database import Obreros
 from schemas import ObrerosRequestModel
 
+import jwt
+from fastapi import HTTPException
+from datetime import datetime, timedelta
+
 
 def crear_obrero(request: ObrerosRequestModel):
     request = Obreros.create(
@@ -69,3 +73,34 @@ def barra_busqueda_obreros(search_text):
     json_result = json.dumps({'Obreros': resultados})
     data = json.loads(json_result)
     return data
+
+
+# ************************************************************************************************
+# login
+SECRET_KEY = "177013"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+async def login_user(request_login):
+    # Verifica las credenciales del usuario
+    username = request_login.username
+    password = request_login.password
+    token = await authenticate_user(username, password)
+    return {"access_token": token, "token_type": "bearer"}
+
+
+async def authenticate_user(username: str, password: str):
+
+    obreros = Obreros.get_or_none(Obreros.usuario == username)
+
+    if obreros is None or not Obreros.contrasena == password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    access_token_expires = timedelta(seconds=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_data = {
+        "sub": obreros.usuario,
+        "exp": datetime.utcnow() + access_token_expires,
+    }
+    access_token = jwt.encode(access_token_data, SECRET_KEY, algorithm=ALGORITHM)
+
+    return access_token
