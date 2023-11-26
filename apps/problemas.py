@@ -86,33 +86,42 @@ def main_menu(gpo):
 
 
 def perfil(jid):
-    problemas = Problema.select().join(Creyentes).join(
-        Estados, on=(Problema.id_estado == Estados.id)
-    ).where(
-        ((Creyentes.id == jid) & (Problema.activo == 1)) | ((Creyentes.id == 3) & (Problema.activo == 1))
-    ).order_by(Problema.revision.asc())
+    try:
+        problemas = Problema.select().join(Creyentes).join(Estados, on=(Problema.id_estado == Estados.id)).where(
+            ((Creyentes.id == jid) & (Problema.activo == 1)) | ((Creyentes.id == 3) & (Problema.activo == 1))
+        ).order_by(Problema.revision.asc())
 
-    resultados = []
+        resultados = []
 
-    for fila in problemas:
-        creyente = Creyentes.get(Creyentes.id == fila.id_creyente.id)
-        estado = Estados.get(Estados.id == fila.id_estado.id)
-        modelo = {
-            'id': fila.id,
-            'id_creyente': fila.id_creyente.id,
-            'nombre_creyente': creyente.nombre,
-            'nombre_problema': fila.nombre_problema,
-            'descripcion': fila.descripcion,
-            'fecha_creacion': fila.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'revision': fila.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'id_estado': fila.id_estado.id,
-            'nombre_estado': estado.nombre,
-            'activo': fila.activo
+        for fila in problemas:
+            creyente = Creyentes.get(Creyentes.id == fila.id_creyente.id)
+            estado = Estados.get(Estados.id == fila.id_estado.id)
+            modelo = {
+                'id': fila.id,
+                'id_creyente': fila.id_creyente.id,
+                'nombre_creyente': creyente.nombre,
+                'nombre_problema': fila.nombre_problema,
+                'descripcion': fila.descripcion,
+                'fecha_creacion': fila.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'revision': fila.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'id_estado': fila.id_estado.id,
+                'nombre_estado': estado.nombre,
+                'activo': fila.activo
+            }
+            resultados.append(modelo)
+
+        data = {
+            'nombre_creyente': [creyente.nombre for creyente in Creyentes.select().where(Creyentes.id == jid)],
+            'Problemas': resultados if resultados else None
         }
-        resultados.append(modelo)
 
-        data = {'Problemas': resultados}
-    return data
+        return data
+
+    except Exception as e:
+        # Manejar la excepción adecuadamente, por ejemplo, imprimir un mensaje de error o registrar el problema.
+        print(f"Error en la función perfil: {e}")
+        return None
+
 
 
 def cambiar_estado_problema(jid, id_estado):

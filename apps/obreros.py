@@ -81,6 +81,7 @@ SECRET_KEY = "177013"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+
 async def login_user(request_login):
     # Verifica las credenciales del usuario
     username = request_login.username

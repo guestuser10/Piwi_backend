@@ -19,7 +19,7 @@ app = FastAPI(
 
 origins = [
     "http://localhost",
-    "http://localhost:4200",  # Reemplaza con la URL de tu aplicación Angular en desarrollo
+    "http://localhost:4200",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -103,7 +103,7 @@ async def desactivar_obrero(jid):
 # CRUD Creyentes
 # Insert
 @app.post("/create_Creyentes")
-async def create_creyentes(request: ObrerosRequestModel):
+async def create_creyentes(request: CreyentesRequestModel):
     return crear_creyentes(request)
 
 

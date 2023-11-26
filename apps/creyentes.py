@@ -8,7 +8,7 @@ def crear_creyentes(request: CreyentesRequestModel):
         nombre=request.nombre,
         telefono=request.telefono,
         direccion=request.direccion,
-        dias_disp=request.direccion,
+        dias_disp=request.dias_disp,
         id_grupo=request.id_grupo,
         activo=request.activo,
     )
@@ -24,7 +24,7 @@ def buscar_creyentes():
             'nombre': fila.nombre,
             'telefono': fila.telefono,
             'direccion': fila.direccion,
-            'dias_disp': fila.direccion,
+            'dias_disp': fila.dias_disp,
             'id_grupo': fila.id_grupo.id,
             'activo': fila.activo
         }
