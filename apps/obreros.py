@@ -2,7 +2,7 @@ import json
 
 from peewee import DoesNotExist
 
-from database import Obreros
+from database import obreros
 from schemas import ObrerosRequestModel
 
 import jwt
@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 
 def crear_obrero(request: ObrerosRequestModel):
-    request = Obreros.create(
+    request = obreros.create(
         nombre=request.nombre,
         telefono=request.telefono,
         direccion=request.direccion,
@@ -24,7 +24,7 @@ def crear_obrero(request: ObrerosRequestModel):
 
 
 def buscar_obreros():
-    request = Obreros.select().where(Obreros.activo == 1)
+    request = obreros.select().where(obreros.activo == 1)
     resultados = []
     for fila in request:
         modelo = {
@@ -52,7 +52,7 @@ def cambiar_obrero():
 
 
 def elimnar_obrero(jid):
-    datos = Obreros.select().where(Obreros.id == jid).first()
+    datos = obreros.select().where(obreros.id == jid).first()
     if datos:
         setattr(datos, 'activo', 0)
         datos.save()
@@ -61,7 +61,7 @@ def elimnar_obrero(jid):
 
 
 def barra_busqueda_obreros(search_text):
-    request = Obreros.select().where(Obreros.activo == 1 and Obreros.nombre.contains(search_text))
+    request = obreros.select().where(obreros.activo == 1 and obreros.nombre.contains(search_text))
     resultados = []
     for fila in request:
         modelo = {
@@ -95,9 +95,9 @@ async def login_user(request_login):
 
 async def authenticate_user(username: str, password: str):
 
-    obreros = Obreros.get_or_none(Obreros.usuario == username and Obreros.contrasena == password)
+    obreros = obreros.get_or_none(obreros.usuario == username and obreros.contrasena == password)
 
-    if obreros is None or not Obreros.contrasena == password:
+    if obreros is None or not obreros.contrasena == password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     access_token_expires = timedelta(seconds=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -112,7 +112,7 @@ async def authenticate_user(username: str, password: str):
 
 def buscar_obrero_por_usuario(usuario_buscar):
     try:
-        obrero = Obreros.get((Obreros.usuario == usuario_buscar) & (Obreros.activo == 1))
+        obrero = obreros.get((obreros.usuario == usuario_buscar) & (obreros.activo == 1))
         modelo = {
             'id_grupo': obrero.id_grupo.id,
         }

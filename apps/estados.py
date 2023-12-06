@@ -1,10 +1,10 @@
 import json
 
-from database import Estados
+from database import estados
 from schemas import EstadosRequestModel, EstadosResponseModel
 
 
-model = Estados
+model = estados
 
 
 def crear_estado(request: EstadosRequestModel):

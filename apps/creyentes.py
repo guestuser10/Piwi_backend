@@ -1,10 +1,10 @@
 import json
-from database import Creyentes
+from database import creyentes
 from schemas import CreyentesRequestModel, CreyentesResponseModel
 
 
 def crear_creyentes(request: CreyentesRequestModel):
-    request = Creyentes.create(
+    request = creyentes.create(
         nombre=request.nombre,
         telefono=request.telefono,
         direccion=request.direccion,
@@ -16,7 +16,7 @@ def crear_creyentes(request: CreyentesRequestModel):
 
 
 def buscar_creyentes():
-    request = Creyentes.select().where(Creyentes.activo == 1)
+    request = creyentes.select().where(creyentes.activo == 1)
     resultados = []
     for fila in request:
         modelo = {
@@ -36,7 +36,7 @@ def buscar_creyentes():
 
 def buscar_creyente_por_id(id_creyente):
     try:
-        creyente = Creyentes.get((Creyentes.id == id_creyente) & (Creyentes.activo == 1))
+        creyente = creyentes.get((creyentes.id == id_creyente) & (creyentes.activo == 1))
         resultado = {
             'id': creyente.id,
             'nombre': creyente.nombre,
@@ -47,7 +47,7 @@ def buscar_creyente_por_id(id_creyente):
             'activo': creyente.activo
         }
         return {'Creyente': resultado}
-    except Creyentes.DoesNotExist:
+    except creyentes.DoesNotExist:
         return {'error': 'Creyente no encontrado'}
 
 
@@ -56,7 +56,7 @@ def cambiar_creyentes():
 
 
 def elimnar_creyentes(jid):
-    datos = Creyentes.select().where(Creyentes.id == jid).first()
+    datos = creyentes.select().where(creyentes.id == jid).first()
     if datos:
         setattr(datos, 'activo', 0)
         datos.save()
@@ -65,7 +65,7 @@ def elimnar_creyentes(jid):
 
 
 def barra_busqueda_miembros(search_text):
-    request = Creyentes.select().where(Creyentes.activo == 1 & Creyentes.nombre.contains(search_text))
+    request = creyentes.select().where(creyentes.activo == 1 & creyentes.nombre.contains(search_text))
     resultados = []
     for fila in request:
         modelo = {

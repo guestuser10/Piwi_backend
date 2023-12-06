@@ -3,98 +3,98 @@ from datetime import datetime, timedelta
 from peewee import *
 
 database = MySQLDatabase(
-    'backend',
-    user='sealehen',
-    password='1234',
-    host='localhost',
+    'buecxuea9f2lqjuodwnu',
+    user='uzltr9cv3fug4ubo',
+    password='fTJtX0E4q5iFgOA89CSz',
+    host='buecxuea9f2lqjuodwnu-mysql.services.clever-cloud.com',
     port=3306
 )
 
 
-class Grupos(Model):
+class grupos(Model):
     id = IntegerField()
     nombre = CharField(max_length=255)
     activo = IntegerField(default=1)
 
     class Meta:
         database = database
-        table_name = 'Grupos'
+        table_name = 'grupos'
 
     def __str__(self):
         return f"ID: {self.id}, Nombre: {self.nombre}, Activo: {self.activo}"
 
 
-class Obreros(Model):
+class obreros(Model):
     id = IntegerField()
     nombre = CharField(max_length=255)
     telefono = CharField(max_length=255)
     direccion = CharField(max_length=255)
-    id_grupo = ForeignKeyField(Grupos, field='id', backref='obreros', column_name='id_grupo')
+    id_grupo = ForeignKeyField(grupos, field='id', backref='obreros', column_name='id_grupo')
     activo = IntegerField(default=1)
     usuario = CharField(max_length=255)
     contrasena = CharField(max_length=255)
 
     class Meta:
         database = database
-        table_name = 'Obreros'
+        table_name = 'obreros'
 
     def __str__(self):
         return f"ID: {self.id}, Nombre: {self.nombre}, Teléfono: {self.telefono}, Activo: {self.activo}"
 
 
-class Creyentes(Model):
+class creyentes(Model):
     id = IntegerField()
     nombre = CharField(max_length=255)
     telefono = CharField(max_length=255)
     direccion = TextField()
     dias_disp = CharField(max_length=255)
-    id_grupo = ForeignKeyField(Grupos,  field='id', backref='creyentes', column_name='id_grupo')
+    id_grupo = ForeignKeyField(grupos, field='id', backref='creyentes', column_name='id_grupo')
     activo = IntegerField(default=1)
 
     class Meta:
         database = database
-        table_name = 'Creyentes'
+        table_name = 'creyentes'
 
     def __str__(self):
         return f"ID: {self.id}, Nombre: {self.nombre}, Teléfono: {self.telefono}, Activo: {self.activo}"
 
 
-class Estados(Model):
+class estados(Model):
     id = IntegerField()
     nombre = CharField(max_length=255)
     activo = IntegerField(default=1)
 
     class Meta:
         database = database
-        table_name = 'Estados'
+        table_name = 'estados'
 
     def __str__(self):
         return f"ID: {self.id}, Nombre: {self.nombre}, Activo: {self.activo}"
 
 
-class Problema(Model):
+class problema(Model):
     id = IntegerField()
-    id_creyente = ForeignKeyField(Creyentes, field='id', backref='problema', column_name='id_creyente')
+    id_creyente = ForeignKeyField(creyentes, field='id', backref='problema', column_name='id_creyente')
     nombre_problema = CharField(max_length=50)
     descripcion = TextField()
     fecha_creacion = DateTimeField(default=datetime.now)
     revision = DateTimeField(default=(datetime.now() + timedelta(weeks=1)))
-    id_estado = ForeignKeyField(Estados, field='id', backref='problema', column_name='id_estado')
+    id_estado = ForeignKeyField(estados, field='id', backref='problema', column_name='id_estado')
     activo = IntegerField(default=1)
 
     class Meta:
         database = database
-        table_name = 'Problema'
+        table_name = 'problema'
 
     def __str__(self):
         return f"ID: {self.id}, Descripción: {self.descripcion}, Activo: {self.activo}"
 
 
-class Mensajes(Model):
+class mensajes(Model):
     id = IntegerField()
     mensaje = TextField()
     fecha = DateTimeField(default=datetime.now)
-    id_problema = ForeignKeyField(Problema, field='id', backref='mensajes', column_name='id_problema')
+    id_problema = ForeignKeyField(problema, field='id', backref='mensajes', column_name='id_problema')
     activo = IntegerField(default=1)
 
     class Meta:

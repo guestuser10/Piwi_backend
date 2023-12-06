@@ -5,7 +5,7 @@ from schemas import *
 
 
 def crear_grupo(request: GruposRequestModel):
-    request = Grupos.create(
+    request = grupos.create(
             nombre=request.nombre,
             activo=request.activo
         )
@@ -13,7 +13,7 @@ def crear_grupo(request: GruposRequestModel):
 
 
 def buscar_grupos():
-    request = Grupos.select().where(Grupos.activo == '1')
+    request = grupos.select().where(grupos.activo == '1')
     resultados = []
     for fila in request:
         grupo = GruposResponseModel(id=fila.id, nombre=fila.nombre, activo=fila.activo)
@@ -33,7 +33,7 @@ def cambiar_grupo():
 
 
 def elimnar_grupo(jid):
-    datos = Grupos.select().where(Grupos.id == jid).first()
+    datos = grupos.select().where(grupos.id == jid).first()
     if datos:
         setattr(datos, 'activo', 0)
         datos.save()

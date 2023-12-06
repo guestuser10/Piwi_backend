@@ -1,9 +1,9 @@
 import json
-from database import Mensajes, Problema, Creyentes
+from database import mensajes, problema, creyentes
 from schemas import MensajesRequestModel, MensajesResponseModel
 
 def crear_mensaje(request: MensajesRequestModel):
-    mensaje = Mensajes.create(
+    mensaje = mensajes.create(
         mensaje=request.mensaje,
         id_problema=request.id_problema,
         activo=request.activo,
@@ -11,7 +11,7 @@ def crear_mensaje(request: MensajesRequestModel):
     return mensaje
 
 def buscar_mensajes():
-    request = Mensajes.select().where(Mensajes.activo == 1)
+    request = mensajes.select().where(mensajes.activo == 1)
     resultados = []
     for fila in request:
         modelo = {
@@ -27,7 +27,7 @@ def buscar_mensajes():
     return data
 
 def eliminar_mensaje(id):
-    datos = Mensajes.select().where(Mensajes.id == id).first()
+    datos = mensajes.select().where(mensajes.id == id).first()
     if datos:
         setattr(datos, 'activo', 0)
         datos.save()
@@ -36,7 +36,7 @@ def eliminar_mensaje(id):
 
 
 def buscar_conversacion(id_problema):
-    problema = Problema.select().join(Creyentes).where(Problema.id == id_problema, Problema.activo == 1).first()
+    problema = problema.select().join(creyentes).where(problema.id == id_problema, problema.activo == 1).first()
 
     if problema:
         modelo_problema = {
@@ -51,7 +51,7 @@ def buscar_conversacion(id_problema):
             'activo': problema.activo
         }
 
-        mensajes = Mensajes.select().where((Mensajes.activo == 1) & (Mensajes.id_problema == id_problema))
+        mensajes = mensajes.select().where((mensajes.activo == 1) & (mensajes.id_problema == id_problema))
         lista_mensajes = []
         for mensaje in mensajes:
             modelo_mensaje = {

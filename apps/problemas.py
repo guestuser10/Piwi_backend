@@ -1,10 +1,10 @@
 import json
-from database import Problema, Creyentes, Estados
+from database import problema, creyentes, estados
 from schemas import ProblemaRequestModel, ProblemaResponseModel
 
 
 def crear_problema(request: ProblemaRequestModel):
-    request = Problema.create(
+    request = problema.create(
         id_creyente=request.id_creyente,
         nombre_problema=request.nombre_problema,
         descripcion=request.descripcion,
@@ -15,11 +15,11 @@ def crear_problema(request: ProblemaRequestModel):
 
 
 def buscar_problemas():
-    request = Problema.select().where(Problema.activo == 1).order_by(Problema.revision.asc())
+    request = problema.select().where(problema.activo == 1).order_by(problema.revision.asc())
     resultados = []
 
     for fila in request:
-        creyente = Creyentes.get(Creyentes.id == fila.id_creyente.id)
+        creyente = creyentes.get(creyentes.id == fila.id_creyente.id)
         modelo = {
             'id': fila.id,
             'id_creyente': fila.id_creyente.id,
@@ -49,7 +49,7 @@ def cambiar_creyentes():
 
 
 def elimnar_problema(jid):
-    datos = Problema.select().where(Problema.id == jid).first()
+    datos = problema.select().where(problema.id == jid).first()
     if datos:
         setattr(datos, 'activo', 0)
         datos.save()
@@ -57,14 +57,14 @@ def elimnar_problema(jid):
     return 'error'
 
 def main_menu(gpo):
-    problema = Problema.select().join(Creyentes).where(
-        ((Creyentes.id_grupo == gpo) & (Problema.activo == 1)) | ((Creyentes.id_grupo == 3) & (Problema.activo == 1))
-    ).order_by(Problema.revision.asc())
+    problema = problema.select().join(creyentes).where(
+        ((creyentes.id_grupo == gpo) & (problema.activo == 1)) | ((creyentes.id_grupo == 3) & (problema.activo == 1))
+    ).order_by(problema.revision.asc())
 
     resultados = []
 
     for fila in problema:
-        creyente = Creyentes.get(Creyentes.id == fila.id_creyente.id)
+        creyente = creyentes.get(creyentes.id == fila.id_creyente.id)
         modelo = {
             'id': fila.id,
             'id_creyente': fila.id_creyente.id,
@@ -85,15 +85,15 @@ def main_menu(gpo):
 
 def perfil(jid):
     try:
-        problemas = Problema.select().join(Creyentes).join(Estados, on=(Problema.id_estado == Estados.id)).where(
-            ((Creyentes.id == jid) & (Problema.activo == 1)) | ((Creyentes.id == 3) & (Problema.activo == 1))
-        ).order_by(Problema.revision.asc())
+        problemas = problema.select().join(creyentes).join(estados, on=(problema.id_estado == estados.id)).where(
+            ((creyentes.id == jid) & (problema.activo == 1)) | ((creyentes.id == 3) & (problema.activo == 1))
+        ).order_by(problema.revision.asc())
 
         resultados = []
 
         for fila in problemas:
-            creyente = Creyentes.get(Creyentes.id == fila.id_creyente.id)
-            estado = Estados.get(Estados.id == fila.id_estado.id)
+            creyente = creyentes.get(creyentes.id == fila.id_creyente.id)
+            estado = estados.get(estados.id == fila.id_estado.id)
             modelo = {
                 'id': fila.id,
                 'id_creyente': fila.id_creyente.id,
@@ -109,7 +109,7 @@ def perfil(jid):
             resultados.append(modelo)
 
         data = {
-            'nombre_creyente': [creyente.nombre for creyente in Creyentes.select().where(Creyentes.id == jid)],
+            'nombre_creyente': [creyente.nombre for creyente in creyentes.select().where(creyentes.id == jid)],
             'Problemas': resultados if resultados else None
         }
 
@@ -123,7 +123,7 @@ def perfil(jid):
 
 
 def cambiar_estado_problema(jid, id_estado):
-    datos = Problema.select().where(Problema.id == jid).first()
+    datos = problema.select().where(problema.id == jid).first()
     if datos:
         setattr(datos, 'id_estado', id_estado)
         datos.save()
@@ -132,7 +132,7 @@ def cambiar_estado_problema(jid, id_estado):
 
 
 def cambiar_revision_problema(jid, revision):
-    datos = Problema.select().where(Problema.id == jid).first()
+    datos = problema.select().where(problema.id == jid).first()
     if datos:
         setattr(datos, 'revision', revision)
         datos.save()
