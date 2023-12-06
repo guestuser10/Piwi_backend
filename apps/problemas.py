@@ -1,5 +1,6 @@
 import json
 from database import problema, creyentes, estados
+from database import problema as Problema
 from schemas import ProblemaRequestModel, ProblemaResponseModel
 
 
@@ -57,9 +58,9 @@ def elimnar_problema(jid):
     return 'error'
 
 def main_menu(gpo):
-    problema = problema.select().join(creyentes).where(
-        ((creyentes.id_grupo == gpo) & (problema.activo == 1)) | ((creyentes.id_grupo == 3) & (problema.activo == 1))
-    ).order_by(problema.revision.asc())
+    problema = Problema.select().join(creyentes).where(
+        ((creyentes.id_grupo == gpo) & (Problema.activo == 1)) | ((creyentes.id_grupo == 3) & (Problema.activo == 1))
+    ).order_by(Problema.revision.asc())
 
     resultados = []
 

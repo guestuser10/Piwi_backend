@@ -3,6 +3,7 @@ import json
 from peewee import DoesNotExist
 
 from database import obreros
+from database import obreros as Obreros
 from schemas import ObrerosRequestModel
 
 import jwt
@@ -95,9 +96,9 @@ async def login_user(request_login):
 
 async def authenticate_user(username: str, password: str):
 
-    obreros = obreros.get_or_none(obreros.usuario == username and obreros.contrasena == password)
+    obreros = Obreros.get_or_none(Obreros.usuario == username and Obreros.contrasena == password)
 
-    if obreros is None or not obreros.contrasena == password:
+    if obreros is None or not Obreros.contrasena == password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     access_token_expires = timedelta(seconds=ACCESS_TOKEN_EXPIRE_MINUTES)

@@ -9,7 +9,13 @@ database = MySQLDatabase(
     host='buecxuea9f2lqjuodwnu-mysql.services.clever-cloud.com',
     port=3306
 )
-
+""" 
+'backend',
+    'backend',
+    user='sealehen',
+    password='1234',
+    host='localhost',
+"""
 
 class grupos(Model):
     id = IntegerField()

@@ -36,24 +36,24 @@ def eliminar_mensaje(id):
 
 
 def buscar_conversacion(id_problema):
-    problema = problema.select().join(creyentes).where(problema.id == id_problema, problema.activo == 1).first()
+    request = problema.select().join(creyentes).where(problema.id == id_problema, problema.activo == 1).first()
 
-    if problema:
+    if request:
         modelo_problema = {
-            'id': problema.id,
-            'id_creyente': problema.id_creyente.id,
-            'nombre_creyente': problema.id_creyente.nombre,
-            'nombre_problema': problema.nombre_problema,
-            'descripcion': problema.descripcion,
-            'fecha_creacion': problema.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'revision': problema.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'id_estado': problema.id_estado.id,
-            'activo': problema.activo
+            'id': request.id,
+            'id_creyente': request.id_creyente.id,
+            'nombre_creyente': request.id_creyente.nombre,
+            'nombre_problema': request.nombre_problema,
+            'descripcion': request.descripcion,
+            'fecha_creacion': request.fecha_creacion.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'revision': request.revision.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'id_estado': request.id_estado.id,
+            'activo': request.activo
         }
 
-        mensajes = mensajes.select().where((mensajes.activo == 1) & (mensajes.id_problema == id_problema))
+        msg = mensajes.select().where((mensajes.activo == 1) & (mensajes.id_problema == id_problema))
         lista_mensajes = []
-        for mensaje in mensajes:
+        for mensaje in msg:
             modelo_mensaje = {
                 'id': mensaje.id,
                 'mensaje': mensaje.mensaje,
