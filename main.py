@@ -10,7 +10,6 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from apps.connector import *
 
-
 app = FastAPI(
     title='pds',
     description='api para german',
@@ -28,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 # ********************************************************************************************
 # events
 @app.on_event("startup")
@@ -50,7 +51,7 @@ async def root():
 
 
 # ********************************************************************************************
-#login
+# login
 Oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
@@ -73,7 +74,7 @@ async def select_grupo():
     return buscar_grupos()
 
 
-#eliminar
+# eliminar
 @app.put("/desactivar_grupo/{jid}")
 async def desactivar_grupo(jid, request_login: str = Depends(Oauth2_scheme)):
     return elimnar_grupo(jid)
@@ -93,12 +94,15 @@ async def select_obrero():
     return buscar_obreros()
 
 
-#eliminar
+# eliminar
 @app.put("/desactivar_obrero/{jid}")
 async def desactivar_obrero(jid):
     return elimnar_obrero(jid)
 
 
+@app.get("/search_obrero/{usuario}")
+async def search_obrero(usuario):
+    return buscar_obrero_por_usuario(usuario)
 # ********************************************************************************************
 # CRUD Creyentes
 # Insert
@@ -113,10 +117,14 @@ async def select_creyentes():
     return buscar_creyentes()
 
 
-#eliminar
+# eliminar
 @app.put("/desactivar_Creyentes/{jid}")
 async def desactivar_creyentes(jid):
     return elimnar_creyentes(jid)
+
+@app.get("/search_Creyente/{jid}")
+async def search_creyente(jid):
+    return buscar_creyente_por_id(jid)
 
 
 # ********************************************************************************************
@@ -133,7 +141,7 @@ async def select_estados():
     return buscar_estados()
 
 
-#eliminar
+# eliminar
 @app.put("/desactivar_estado/{jid}")
 async def desactivar_estado(jid):
     return elimnar_estado(jid)
@@ -215,3 +223,9 @@ async def cambiar_estado(jid, estado_id):
 @app.put("/revision/{jid}/{revision}")
 async def cambiar_revision(jid, revision):
     return cambiar_revision_problema(jid, revision)
+
+# ****************************************************************************
+# faq
+@app.get("/faq")
+async def faq():
+    return get_faq()

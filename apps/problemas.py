@@ -8,8 +8,6 @@ def crear_problema(request: ProblemaRequestModel):
         id_creyente=request.id_creyente,
         nombre_problema=request.nombre_problema,
         descripcion=request.descripcion,
-        fecha_creacion=request.fecha_creacion,
-        revision=request.revision,
         id_estado=request.id_estado,
         activo=request.activo,
     )

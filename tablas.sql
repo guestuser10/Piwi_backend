@@ -75,8 +75,6 @@ FROM mensajes m
 JOIN problema p ON m.id_problema = p.id
 ORDER BY m.fecha ASC; -- ASC para ordenar de forma ascendente (es decir, el más antiguo primero)
 
-
-
 ALTER TABLE nombre_de_la_tabla
 ADD correo VARCHAR(255),
 ADD contrasena VARCHAR(255);

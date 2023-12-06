@@ -103,3 +103,16 @@ class Mensajes(Model):
 
     def __str__(self):
         return f"ID: {self.id}, Mensaje: {self.mensaje}, Activo: {self.activo}"
+
+
+class faq(Model):
+    id = IntegerField()
+    ask = TextField()
+    answer = TextField()
+
+    class Meta:
+        database = database
+        table_name = 'faq'
+
+    def __str__(self):
+        return f"ID: {self.id}, ask: {self.ask}, answer: {self.answer}"

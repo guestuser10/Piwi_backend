@@ -34,8 +34,21 @@ def buscar_creyentes():
     return data
 
 
-def buscar_creyente():
-    pass
+def buscar_creyente_por_id(id_creyente):
+    try:
+        creyente = Creyentes.get((Creyentes.id == id_creyente) & (Creyentes.activo == 1))
+        resultado = {
+            'id': creyente.id,
+            'nombre': creyente.nombre,
+            'telefono': creyente.telefono,
+            'direccion': creyente.direccion,
+            'dias_disp': creyente.dias_disp,
+            'id_grupo': creyente.id_grupo.id,
+            'activo': creyente.activo
+        }
+        return {'Creyente': resultado}
+    except Creyentes.DoesNotExist:
+        return {'error': 'Creyente no encontrado'}
 
 
 def cambiar_creyentes():

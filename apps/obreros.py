@@ -1,4 +1,7 @@
 import json
+
+from peewee import DoesNotExist
+
 from database import Obreros
 from schemas import ObrerosRequestModel
 
@@ -92,7 +95,7 @@ async def login_user(request_login):
 
 async def authenticate_user(username: str, password: str):
 
-    obreros = Obreros.get_or_none(Obreros.usuario == username)
+    obreros = Obreros.get_or_none(Obreros.usuario == username and Obreros.contrasena == password)
 
     if obreros is None or not Obreros.contrasena == password:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
@@ -105,3 +108,16 @@ async def authenticate_user(username: str, password: str):
     access_token = jwt.encode(access_token_data, SECRET_KEY, algorithm=ALGORITHM)
 
     return access_token
+
+
+def buscar_obrero_por_usuario(usuario_buscar):
+    try:
+        obrero = Obreros.get((Obreros.usuario == usuario_buscar) & (Obreros.activo == 1))
+        modelo = {
+            'id_grupo': obrero.id_grupo.id,
+        }
+        json_result = json.dumps({'Obrero': modelo})
+        data = json.loads(json_result)
+        return data
+    except DoesNotExist:
+        return {'mensaje': 'Usuario no encontrado'}
